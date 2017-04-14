@@ -1,6 +1,8 @@
 resolver: lts-8.9
 packages:
 - '.'
-extra-deps: []
+extra-deps:
+- datetime-0.3.1
+- containers-0.5.7.1
 flags: {}
 extra-package-dbs: []
