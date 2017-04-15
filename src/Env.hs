@@ -7,10 +7,12 @@ import Data.List
 import Data.Time.Clock (UTCTime)
 import Types
 
-eval :: String -> Env -> (String, Env)
-eval cmd e = case parse cmd e of
-               Left error -> (error, e)
-               Right (action, run) -> run action e
+eval :: String -> State Env String
+eval cmd = do
+  e <- get
+  case parse cmd e of
+    Left error -> return error
+    Right (action, run) -> run action
 
 parse :: String -> Env -> Either Error (Action, ActionRunner)
 parse "" e = Left ""

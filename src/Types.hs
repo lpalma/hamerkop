@@ -4,8 +4,7 @@ import Control.Monad.State.Strict
 import qualified Data.Map.Lazy as Map
 import Data.Time.Clock (UTCTime)
 
--- type ActionHandler = Action -> Env -> (String, Env)
-type ActionRunner = Action -> Env -> (String, Env)
+type ActionRunner = Action -> State Env String
 type Users = Map.Map String User
 type Env = ([Command], Users, UTCTime)
 type Error = String
