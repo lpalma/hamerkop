@@ -1,0 +1,30 @@
+{-# LANGUAGE RecordWildCards #-}
+
+module Commands where
+
+import Control.Monad.State.Strict
+import qualified Data.Map.Lazy as Map
+import Data.Time.Clock (UTCTime)
+import Types
+
+postRunner :: ActionRunner
+postRunner a@UserAct{..} = do
+  modify $ upsert a
+  return $ userName ++ ": " ++ args
+
+upsert :: Action -> Env -> Env
+upsert a@UserAct{..} (c,users,t) = (c, Map.alter upsert' userName users, t)
+  where upsert' Nothing = Just $ newUser a
+        upsert' (Just u@User{..}) = Just $ addPost a u
+
+newUser :: Action -> User
+newUser a@UserAct{..} = User { name = userName
+                             , posts = [newPost a]
+                             , followers = []
+                             , followings = [] }
+
+addPost :: Action -> User -> User
+addPost a u@User{..} = u { posts = newPost a : posts}
+
+newPost :: Action -> Post
+newPost UserAct{..} = Post { user = userName, msg = args, date = time }
