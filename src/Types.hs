@@ -38,6 +38,7 @@ data Action = UserAct
               , action :: String
               , args :: String
               , time :: UTCTime }
+              deriving (Show, Eq)
 
 toUserAction :: [String] -> UTCTime -> Action
 toUserAction [x] t = UserAct { userName = x
