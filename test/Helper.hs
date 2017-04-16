@@ -1,4 +1,8 @@
-module Helper where
+module Helper
+  ( emptyEnv
+  , newUserAct
+  , midnight
+  ) where
 
 import Types
 import qualified Data.Map.Lazy as Map
@@ -9,7 +13,7 @@ import Env
 emptyEnv :: Env
 emptyEnv = ([], Map.empty, midnight)
 
-newUserAct :: String -> String -> String -> UTCTime
+newUserAct :: String -> String -> String -> UTCTime -> Action
 newUserAct n act args t = UserAct { userName = n
                                   , action = act
                                   , args = args
