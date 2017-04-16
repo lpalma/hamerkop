@@ -1,7 +1,7 @@
 module Types
   ( ActionRunner
   , Users
-  , Env
+  , Env(..)
   , Error
   , User(..)
   , Post(..)
@@ -16,8 +16,12 @@ import Data.Time.Clock (UTCTime)
 
 type ActionRunner = Action -> State Env String
 type Users = Map.Map String User
-type Env = ([Command], Users, UTCTime)
 type Error = String
+
+data Env = Env
+           { cmds :: [Command]
+           , users :: Users
+           , eTime :: UTCTime }
 
 data User = User
             { name :: String

@@ -13,7 +13,7 @@ postRunner a@UserAct{..} = do
   return $ userName ++ ": " ++ args
 
 upsert :: Action -> Env -> Env
-upsert a@UserAct{..} (c,users,t) = (c, Map.alter upsert' userName users, t)
+upsert a@UserAct{..} e@Env{..} = e { users = Map.alter upsert' userName users }
   where upsert' Nothing = Just $ newUser a
         upsert' (Just u@User{..}) = Just $ addPost a u
 
