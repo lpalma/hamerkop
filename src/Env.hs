@@ -1,6 +1,6 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Env where
+module Env (eval) where
 
 import Control.Monad.State.Strict
 import Data.List

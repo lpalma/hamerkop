@@ -1,4 +1,14 @@
-module Types where
+module Types
+  ( ActionRunner
+  , Users
+  , Env
+  , Error
+  , User(..)
+  , Post(..)
+  , Command(..)
+  , Action(..)
+  , toUserAction
+  ) where
 
 import Control.Monad.State.Strict
 import qualified Data.Map.Lazy as Map
