@@ -1,13 +1,16 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module Helper
   ( emptyEnv
   , newUserAct
   , midnight
   , stubRunner
   , stubCommand
+  , addUser
   ) where
 
 import Types
-import qualified Data.Map.Lazy as Map
+import qualified Data.Map.Lazy as Map (insert, empty)
 import Data.Time.Calendar (fromGregorian)
 import Data.Time.Clock
 import Env
@@ -29,3 +32,6 @@ stubRunner a = return ""
 
 stubCommand :: Command
 stubCommand = Cmd { cmd = "stub", runner = stubRunner }
+
+addUser :: User -> Env -> Env
+addUser u@User{..} e@Env{..} = e { users = Map.insert name u users}
