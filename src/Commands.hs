@@ -1,9 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Commands where
+module Commands (postRunner) where
 
 import Control.Monad.State.Strict
-import qualified Data.Map.Lazy as Map
+import qualified Data.Map.Lazy as Map (alter)
 import Data.Time.Clock (UTCTime)
 import Types
 
