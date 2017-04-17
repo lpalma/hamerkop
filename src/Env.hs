@@ -1,6 +1,9 @@
 {-# LANGUAGE RecordWildCards #-}
 
-module Env (eval) where
+module Env
+  ( eval
+  , addCommand
+  ) where
 
 import Control.Monad.State.Strict (State, get, return, modify)
 import Data.List (find)
@@ -14,6 +17,9 @@ eval cmd = do
   case parse cmd e of
     Left error -> return error
     Right (action, run) -> run action
+
+addCommand :: Command -> State Env ()
+addCommand c@Cmd{..} = modify $ \e@Env{..} -> e { cmds = Map.insert cmd c cmds}
 
 parse :: String -> Env -> Either Error (Action, ActionRunner)
 parse "" e = Left ""

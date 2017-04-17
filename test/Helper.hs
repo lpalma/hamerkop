@@ -2,6 +2,8 @@ module Helper
   ( emptyEnv
   , newUserAct
   , midnight
+  , stubRunner
+  , stubCommand
   ) where
 
 import Types
@@ -21,3 +23,9 @@ newUserAct n act args t = UserAct { userName = n
 
 midnight :: UTCTime
 midnight = UTCTime (fromGregorian 2017 1 1) 0
+
+stubRunner :: ActionRunner
+stubRunner a = return ""
+
+stubCommand :: Command
+stubCommand = Cmd { cmd = "stub", runner = stubRunner }

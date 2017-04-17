@@ -1,9 +1,11 @@
 module EnvSpec (spec) where
 
 import Control.Monad.State.Strict
+import qualified Data.Map.Lazy as Map (member)
 import Env
 import Helper
 import Test.Hspec
+import Types
 
 spec :: Spec
 spec = do
@@ -17,3 +19,9 @@ spec = do
 
     it "user name should start with '@'" $ do
       evalState (eval "john flies away") emptyEnv `shouldBe` "Command john not found."
+
+  describe "Env.addCommand" $ do
+
+    it "update the Env with the command given" $ do
+      length (cmds emptyEnv) `shouldBe` 0
+      Map.member "stub" (cmds (execState (addCommand stubCommand) emptyEnv)) `shouldBe` True
