@@ -11,7 +11,7 @@ import Data.Time.Clock
 import Env
 
 emptyEnv :: Env
-emptyEnv = Env { cmds = [], users = Map.empty, eTime = midnight }
+emptyEnv = Env { cmds = Map.empty, users = Map.empty, eTime = midnight }
 
 newUserAct :: String -> String -> String -> UTCTime -> Action
 newUserAct n act args t = UserAct { userName = n

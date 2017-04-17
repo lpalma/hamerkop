@@ -15,11 +15,12 @@ import qualified Data.Map.Lazy as Map
 import Data.Time.Clock (UTCTime)
 
 type ActionRunner = Action -> State Env String
+type Commands = Map.Map String Command
 type Users = Map.Map String User
 type Error = String
 
 data Env = Env
-           { cmds :: [Command]
+           { cmds :: Commands
            , users :: Users
            , eTime :: UTCTime }
 

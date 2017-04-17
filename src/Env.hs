@@ -2,8 +2,9 @@
 
 module Env (eval) where
 
-import Control.Monad.State.Strict
-import Data.List
+import Control.Monad.State.Strict (State, get, return, modify)
+import Data.List (find)
+import qualified Data.Map.Lazy as Map (insert)
 import Data.Time.Clock (UTCTime)
 import Types
 
