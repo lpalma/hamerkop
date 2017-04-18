@@ -2,7 +2,7 @@
 
 module CommandsSpec (spec) where
 
-import Commands (postRunner, readingRunner, followsRunner)
+import Commands (postRunner, readingRunner, followsRunner, wallRunner)
 import Control.Monad.State.Strict (evalState, execState)
 import qualified Data.Map.Lazy as Map (member, (!), empty)
 import Data.Time.Calendar (fromGregorian)
@@ -50,6 +50,22 @@ spec = do
     it "should consider user name being only first word from argument" $ do
       let env = execState (followsRunner $ stubAction "john smith") emptyEnv
       elem "john" (followings $ getUser "foo" env) `shouldBe` True
+
+  describe "Commands.wallRunner" $ do
+
+    it "should display default message for non created user" $ do
+      let m = "Oops! foo's wall seems empty.\n"
+      evalState (wallRunner $ stubAction "") emptyEnv `shouldBe` m
+
+    it "should display posts from user and followings sorted by time" $ do
+      let m = unlines [ "foo: get to the choppaaa! (31 seconds ago)"
+                      , "bob: you ok bro? (35 seconds ago)"
+                      , "foo: goooo (40 seconds ago)"
+                      , "foo: ruuun (50 seconds ago)"
+                      , "bob: I'm batman (3 minutes ago)"
+                      , "bob: hello! (4 minutes ago)"
+                      , "alice: I like dogs (4 minutes ago)" ]
+      evalState (wallRunner $ stubAction "") usersEnv `shouldBe` m
 
 getUser :: String -> Env -> User
 getUser n Env{..} = users Map.! n
