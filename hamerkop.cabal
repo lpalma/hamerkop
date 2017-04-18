@@ -22,6 +22,7 @@ library
                      , containers
                      , time
                      , mtl
+                     , datetime
   default-language:    Haskell2010
 
 executable hamerkop-exe
