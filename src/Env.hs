@@ -3,11 +3,12 @@
 module Env
   ( eval
   , addCommand
+  , findUsers
   ) where
 
 import Control.Monad.State.Strict (State, get, return, modify)
 import Data.List (find)
-import qualified Data.Map.Lazy as Map (insert)
+import qualified Data.Map.Lazy as Map (insert, filterWithKey)
 import Data.Time.Clock (UTCTime)
 import Types
 
@@ -32,3 +33,6 @@ matchRunner :: Action -> Env -> Either Error (Action, ActionRunner)
 matchRunner a@UserAct{..} Env{..} = case find ((== action) . cmd) cmds of
                                       Nothing -> Left $ "Command " ++ action ++ " not found."
                                       Just Cmd{..} -> Right (a, runner)
+
+findUsers :: [String] -> Users -> Users
+findUsers xs = Map.filterWithKey (\k _ -> k `elem` xs)
