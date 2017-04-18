@@ -57,7 +57,6 @@ upsert a@UserAct{..} e@Env{..} = e { users = Map.alter upsert' userName users }
 newUser :: (String, [Post], [String]) -> User
 newUser (n, ps, fs) = User { name = n
                            , posts = ps
-                           , followers = []
                            , followings = fs }
 
 addPost :: Action -> User -> User

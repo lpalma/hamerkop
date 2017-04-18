@@ -58,20 +58,19 @@ singleUserEnv :: Env
 singleUserEnv = addUser stubUser emptyEnv
 
 multiplePostsEnv :: Env
-multiplePostsEnv = addUser (createUser ("foo", stubPosts, [], [])) emptyEnv
+multiplePostsEnv = addUser (createUser ("foo", stubPosts, [])) emptyEnv
 
 secAfterMidnight :: Integer -> UTCTime
 secAfterMidnight = UTCTime (fromGregorian 2017 1 1) . secondsToDiffTime
 
 stubUser :: User
-stubUser = createUser ("foo", [head stubPosts], [], [])
+stubUser = createUser ("foo", [head stubPosts], [])
 
-createUser :: (String, [Post], [String], [String]) -> User
-createUser (n, ps, fers, fings) = User
-                                  { name = n
-                                  , posts = ps
-                                  , followers = fers
-                                  , followings = fings }
+createUser :: (String, [Post], [String]) -> User
+createUser (n, ps, fs) = User
+                         { name = n
+                         , posts = ps
+                         , followings = fs }
 
 stubPosts :: [Post]
 stubPosts = map createPost [ ("foo", "fourth", midnight)

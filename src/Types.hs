@@ -28,7 +28,6 @@ data Env = Env
 data User = User
             { name :: String
             , posts :: [Post]
-            , followers :: [String]
             , followings :: [String] }
 
 data Post = Post { user :: String 
