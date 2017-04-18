@@ -1,8 +1,10 @@
+{-# LANGUAGE RecordWildCards #-}
+
 module CommandsSpec (spec) where
 
 import Commands (postRunner, readingRunner, followsRunner)
 import Control.Monad.State.Strict (evalState, execState)
-import qualified Data.Map.Lazy as Map (member, elems)
+import qualified Data.Map.Lazy as Map (member, (!))
 import Data.Time.Calendar (fromGregorian)
 import Data.Time.Clock
 import Env
@@ -24,8 +26,7 @@ spec = do
 
     it "should add a new post to existing user" $ do
       let env = execState (postRunner $ stubAction "") singleUserEnv
-      let user = head $ Map.elems $ users env
-      length (posts user) `shouldBe` 2
+      length (posts $ getUser "foo" env) `shouldBe` 2
 
   describe "Commands.readingRunner" $ do
 
@@ -44,13 +45,14 @@ spec = do
 
     it "should update list of followings in the followed user" $ do
       let env = execState (followsRunner $ stubAction "smith") emptyEnv
-      let user = head $ Map.elems $ users env
-      elem "smith" (followings user) `shouldBe` True
+      elem "smith" (followings $ getUser "foo" env) `shouldBe` True
 
     it "should consider user name being only first word from argument" $ do
       let env = execState (followsRunner $ stubAction "john smith") emptyEnv
-      let user = head $ Map.elems $ users env
-      elem "john" (followings user) `shouldBe` True
+      elem "john" (followings $ getUser "foo" env) `shouldBe` True
+
+getUser :: String -> Env -> User
+getUser n Env{..} = users Map.! n
 
 singleUserEnv :: Env
 singleUserEnv = addUser stubUser emptyEnv
