@@ -1,6 +1,6 @@
 module CommandsSpec (spec) where
 
-import Commands (postRunner, readingRunner)
+import Commands (postRunner, readingRunner, followsRunner)
 import Control.Monad.State.Strict (evalState, execState)
 import qualified Data.Map.Lazy as Map (member, elems)
 import Data.Time.Calendar (fromGregorian)
@@ -14,8 +14,9 @@ spec :: Spec
 spec = do
   describe "Commands.postRunner" $ do
     
-    it "should return the message formatted with the user name" $
-      evalState (postRunner $ stubAction "") emptyEnv `shouldBe` "foo: hello world!"
+    it "should return the message formatted with the user name" $ do
+      let msg = "hello world!"
+      evalState (postRunner $ stubAction msg) emptyEnv `shouldBe` "foo: " ++ msg
 
     it "should insert new user upon first post" $ do
       let env = execState (postRunner $ stubAction "") emptyEnv
@@ -38,6 +39,18 @@ spec = do
                              , "second (1 minute ago)"
                              , "first (2 minutes ago)" ]
       evalState (readingRunner $ stubAction "") multiplePostsEnv `shouldBe` expected
+
+  describe "Commands.followRunner" $ do
+
+    it "should update list of followings in the followed user" $ do
+      let env = execState (followsRunner $ stubAction "smith") emptyEnv
+      let user = head $ Map.elems $ users env
+      elem "smith" (followings user) `shouldBe` True
+
+    it "should consider user name being only first word from argument" $ do
+      let env = execState (followsRunner $ stubAction "john smith") emptyEnv
+      let user = head $ Map.elems $ users env
+      elem "john" (followings user) `shouldBe` True
 
 singleUserEnv :: Env
 singleUserEnv = addUser stubUser emptyEnv
