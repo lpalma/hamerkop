@@ -6,6 +6,7 @@ module Commands
   ) where
 
 import Control.Monad.State.Strict
+import Data.List (union)
 import qualified Data.Map.Lazy as Map (alter, lookup)
 import Data.DateTime (diffMinutes, diffSeconds)
 import Data.Time.Clock (UTCTime)
@@ -38,14 +39,14 @@ formatTime post env
 
 upsert :: Action -> Env -> Env
 upsert a@UserAct{..} e@Env{..} = e { users = Map.alter upsert' userName users }
-  where upsert' Nothing = Just $ newUser a
+  where upsert' Nothing = Just $ newUser (userName, [newPost a], [])
         upsert' (Just u@User{..}) = Just $ addPost a u
 
-newUser :: Action -> User
-newUser a@UserAct{..} = User { name = userName
-                             , posts = [newPost a]
-                             , followers = []
-                             , followings = [] }
+newUser :: (String, [Post], [String]) -> User
+newUser (n, ps, fs) = User { name = n
+                           , posts = ps
+                           , followers = []
+                           , followings = fs }
 
 addPost :: Action -> User -> User
 addPost a u@User{..} = u { posts = newPost a : posts}
