@@ -7,6 +7,7 @@ module Helper
   , stubRunner
   , stubCommand
   , addUser
+  , createEnv
   ) where
 
 import Types
@@ -16,13 +17,19 @@ import Data.Time.Clock
 import Env
 
 emptyEnv :: Env
-emptyEnv = Env { cmds = Map.empty, users = Map.empty, eTime = midnight }
+emptyEnv = createEnv (Map.empty, Map.empty, midnight)
 
 newUserAct :: String -> String -> String -> UTCTime -> Action
 newUserAct n act args t = UserAct { userName = n
                                   , action = act
                                   , args = args
                                   , time = t }
+
+createEnv :: (Commands, Users, UTCTime) -> Env
+createEnv (c, u, t) = Env
+                      { cmds = c
+                      , users = u
+                      , eTime = t }
 
 midnight :: UTCTime
 midnight = UTCTime (fromGregorian 2017 1 1) 0
