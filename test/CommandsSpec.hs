@@ -73,6 +73,6 @@ createPost (u, m, d) = Post
 stubAction :: String -> Action
 stubAction a = UserAct
                { userName = "foo"
-               , action = a
-               , args = "hello world!"
+               , action = ""
+               , args = a
                , time = midnight }
