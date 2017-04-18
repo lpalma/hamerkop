@@ -4,7 +4,7 @@ module CommandsSpec (spec) where
 
 import Commands (postRunner, readingRunner, followsRunner)
 import Control.Monad.State.Strict (evalState, execState)
-import qualified Data.Map.Lazy as Map (member, (!))
+import qualified Data.Map.Lazy as Map (member, (!), empty)
 import Data.Time.Calendar (fromGregorian)
 import Data.Time.Clock
 import Env
@@ -36,7 +36,7 @@ spec = do
 
     it "should display user posts with relative post time" $ do
       let expected = unlines [ "fourth (just now)"
-                             , "third (59 seconds ago)"
+                             , "third (21 seconds ago)"
                              , "second (1 minute ago)"
                              , "first (2 minutes ago)" ]
       evalState (readingRunner $ stubAction "") multiplePostsEnv `shouldBe` expected
@@ -58,31 +58,17 @@ singleUserEnv :: Env
 singleUserEnv = addUser stubUser emptyEnv
 
 multiplePostsEnv :: Env
-multiplePostsEnv = addUser (createUser ("foo", stubPosts, [])) emptyEnv
-
-secAfterMidnight :: Integer -> UTCTime
-secAfterMidnight = UTCTime (fromGregorian 2017 1 1) . secondsToDiffTime
+multiplePostsEnv = addUser (createUser ("foo", stubPosts, [])) env
+  where env = createEnv (Map.empty, Map.empty, secAfterMidnight 121)
 
 stubUser :: User
 stubUser = createUser ("foo", [head stubPosts], [])
 
-createUser :: (String, [Post], [String]) -> User
-createUser (n, ps, fs) = User
-                         { name = n
-                         , posts = ps
-                         , followings = fs }
-
 stubPosts :: [Post]
-stubPosts = map createPost [ ("foo", "fourth", midnight)
-                           , ("foo", "third", secAfterMidnight 59)
-                           , ("foo", "second", secAfterMidnight 100)
-                           , ("foo", "first", secAfterMidnight 120) ]
-
-createPost :: (String, String, UTCTime) -> Post
-createPost (u, m, d) = Post
-                       { user = u
-                       , msg = m
-                       , date = d }
+stubPosts = map createPost [ ("foo", "fourth", secAfterMidnight 120)
+                           , ("foo", "third", secAfterMidnight 100)
+                           , ("foo", "second", secAfterMidnight 59)
+                           , ("foo", "first", midnight) ]
 
 stubAction :: String -> Action
 stubAction a = UserAct

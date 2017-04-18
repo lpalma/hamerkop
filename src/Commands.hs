@@ -46,8 +46,8 @@ formatTime post env
   | diff <= 1 = "just now"
   | diff < 60 = show diff ++ " seconds ago"
   | diff <= 119 = "1 minute ago"
-  | otherwise = show (diffMinutes post env) ++ " minutes ago"
-  where diff = diffSeconds post env
+  | otherwise = show (diffMinutes env post) ++ " minutes ago"
+  where diff = diffSeconds env post
 
 upsert :: Action -> Env -> Env
 upsert a@UserAct{..} e@Env{..} = e { users = Map.alter upsert' userName users }
