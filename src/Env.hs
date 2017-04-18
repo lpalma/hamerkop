@@ -22,12 +22,12 @@ parse :: String -> Env -> Either Error (Action, ActionRunner)
 parse "" e = Left ""
 parse args e@Env{..} = case cmd of
                          ('@':xs):ys -> matchRunner (toUserAction (xs:ys) eTime) e
-                         _ -> Left $ "Command " ++ head cmd ++ " not found."
+                         _ -> Left $ "Command " ++ head cmd ++ " not found.\n"
                        where cmd = words args
 
 matchRunner :: Action -> Env -> Either Error (Action, ActionRunner)
 matchRunner a@UserAct{..} Env{..} = case find ((== action) . cmd) cmds of
-                                      Nothing -> Left $ "Command " ++ action ++ " not found."
+                                      Nothing -> Left $ "Command " ++ action ++ " not found.\n"
                                       Just Cmd{..} -> Right (a, runner)
 
 findUsers :: [String] -> Users -> Users

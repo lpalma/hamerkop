@@ -15,7 +15,7 @@ spec = do
       evalState (eval "") emptyEnv `shouldBe` ""
 
     it "should return error message when command is not found" $ do
-      evalState (eval "@john flies away") emptyEnv `shouldBe` "Command flies not found."
+      evalState (eval "@john flies away") emptyEnv `shouldBe` "Command flies not found.\n"
 
     it "user name should start with '@'" $ do
-      evalState (eval "john flies away") emptyEnv `shouldBe` "Command john not found."
+      evalState (eval "john flies away") emptyEnv `shouldBe` "Command john not found.\n"
