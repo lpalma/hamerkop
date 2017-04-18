@@ -3,6 +3,7 @@
 module Commands
   ( postRunner
   , readingRunner
+  , followsRunner
   ) where
 
 import Control.Monad.State.Strict
@@ -19,6 +20,17 @@ postRunner a@UserAct{..} = do
 
 readingRunner :: ActionRunner
 readingRunner a@UserAct{..} = gets $ unlines . userPosts userName
+
+followsRunner :: ActionRunner
+followsRunner a@UserAct{..} = do
+  modify $ newFollow a
+  return $ userName ++ " is now following " ++ args
+
+newFollow :: Action -> Env -> Env
+newFollow UserAct{..} e@Env{..} = e { users = Map.alter follow userName users }
+  where follow Nothing = Just $ newUser (userName, [], [following])
+        follow (Just u@User{..}) = Just u { followings = [following] `union` followings }
+        following = head $ words args
 
 userPosts :: String -> Env -> [String]
 userPosts name e@Env{..} =
