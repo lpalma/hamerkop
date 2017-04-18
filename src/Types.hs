@@ -6,6 +6,7 @@ module Types
   , User(..)
   , Post(..)
   , Command(..)
+  , Commands
   , Action(..)
   , toUserAction
   ) where
