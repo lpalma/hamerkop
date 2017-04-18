@@ -9,6 +9,7 @@ module Types
   , Commands
   , Action(..)
   , toUserAction
+  , toSystemAction
   ) where
 
 import Control.Monad.State.Strict
@@ -38,12 +39,20 @@ data Command = Cmd
                { cmd :: String
                , runner :: ActionRunner }
 
-data Action = UserAct
-              { userName :: String
-              , action :: String
-              , args :: String
-              , time :: UTCTime }
-              deriving (Show, Eq)
+data Action
+  = SystemAct
+    { sysAct :: String
+    , sysTime :: UTCTime }
+  | UserAct
+    { userName :: String
+    , action :: String
+    , args :: String
+    , time :: UTCTime }
+  deriving (Show, Eq)
+
+toSystemAction :: [String] -> UTCTime -> Action
+toSystemAction (x:xs) t = SystemAct { sysAct = x
+                                    , sysTime = t }
 
 toUserAction :: [String] -> UTCTime -> Action
 toUserAction [x] t = UserAct { userName = x

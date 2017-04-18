@@ -22,6 +22,7 @@ parse :: String -> Env -> Either Error (Action, ActionRunner)
 parse "" e = Left ""
 parse args e@Env{..} = case cmd of
                          ('@':xs):ys -> matchRunner (toUserAction (xs:ys) eTime) e
+                         (':':xs):ys -> matchRunner (toSystemAction (xs:ys) eTime) e
                          _ -> Left $ "Command " ++ head cmd ++ " not found.\n"
                        where cmd = words args
 
