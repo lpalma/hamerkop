@@ -1,6 +1,6 @@
 module CommandsSpec (spec) where
 
-import Commands (postRunner)
+import Commands (postRunner, readingRunner)
 import Control.Monad.State.Strict (evalState, execState)
 import qualified Data.Map.Lazy as Map (member, elems)
 import Data.Time.Calendar (fromGregorian)
@@ -11,7 +11,7 @@ import Test.Hspec
 import Types
 
 spec :: Spec
-spec =
+spec = do
   describe "Commands.postRunner" $ do
     
     it "should return the message formatted with the user name" $
@@ -25,6 +25,19 @@ spec =
       let env = execState (postRunner $ stubAction "") singleUserEnv
       let user = head $ Map.elems $ users env
       length (posts user) `shouldBe` 2
+
+  describe "Commands.readingRunner" $ do
+
+    it "should display alt message if user is not found" $ do
+      let failMessage = "foo hasn't posted anything yet.\n"
+      evalState (readingRunner $ stubAction "" ) emptyEnv `shouldBe` failMessage
+
+    it "should display user posts with relative post time" $ do
+      let expected = unlines [ "fourth (just now)"
+                             , "third (59 seconds ago)"
+                             , "second (1 minute ago)"
+                             , "first (2 minutes ago)" ]
+      evalState (readingRunner $ stubAction "") multiplePostsEnv `shouldBe` expected
 
 singleUserEnv :: Env
 singleUserEnv = addUser stubUser emptyEnv
