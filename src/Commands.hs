@@ -4,13 +4,16 @@ module Commands
   ( postRunner
   , readingRunner
   , followsRunner
+  , wallRunner
   ) where
 
 import Control.Monad.State.Strict
-import Data.List (union)
-import qualified Data.Map.Lazy as Map (alter, lookup)
+import Data.List (union, sortBy)
+import qualified Data.Map.Lazy as Map (alter, lookup, elems)
 import Data.DateTime (diffMinutes, diffSeconds)
+import Data.Ord (comparing)
 import Data.Time.Clock (UTCTime)
+import Env (findUsers)
 import Types
 
 postRunner :: ActionRunner
@@ -25,6 +28,18 @@ followsRunner :: ActionRunner
 followsRunner a@UserAct{..} = do
   modify $ newFollow a
   return $ userName ++ " is now following " ++ args
+
+wallRunner :: ActionRunner
+wallRunner a@UserAct{..} = gets $ unlines . userWall userName
+
+userWall :: String -> Env -> [String]
+userWall n Env{..} =
+  case Map.lookup n users of
+    Nothing -> ["Oops! " ++ n ++ "'s wall seems empty."]
+    Just u@User{..} -> map formatWall $ sortPosts u
+  where sortPosts u = sortBy (flip $ comparing date) (wall u)
+        wall u = concatMap posts $ u : Map.elems (findUsers (followings u) users)
+        formatWall p@Post{..} = user ++ ": " ++ formatPost eTime p
 
 newFollow :: Action -> Env -> Env
 newFollow UserAct{..} e@Env{..} = e { users = Map.alter follow userName users }
