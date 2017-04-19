@@ -9,9 +9,13 @@ import Data.Time.Clock (UTCTime, getCurrentTime)
 import Env
 import Types
 
+welcome :: String
+welcome = unlines [ "Welcome to Hamerkop, a Social Network simulation."
+                  , "Type :help to see the list of available commands."]
+
 main :: IO ()
 main = do
-  putStrLn "Welcome to Hamerkop, a simple Social Network simulation."
+  putStrLn welcome
   env <- initialEnv
   nextCommand env
 
