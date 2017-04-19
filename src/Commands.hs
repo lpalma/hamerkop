@@ -45,8 +45,8 @@ cmdDescriptions e = "Available Commands: \n" : map formatDesc (Map.elems $ cmds 
 
 formatDesc :: Command -> String
 formatDesc Cmd{..} = name ++ desc
-  where name = fixName ++ (drop (length fixName) "          ")
-        fixName = if (null cmd) then "show" else cmd
+  where name = fixName ++ drop (length fixName) "          "
+        fixName = if null cmd then "show" else cmd
 
 userWall :: String -> Env -> [String]
 userWall n Env{..} =
@@ -70,7 +70,7 @@ userPosts name e@Env{..} =
     Just User{..} -> map (formatPost eTime) posts
 
 formatPost :: UTCTime -> Post -> String
-formatPost time Post{..} = msg ++ " (" ++ (formatTime date time) ++ ")"
+formatPost time Post{..} = msg ++ " (" ++ formatTime date time ++ ")"
 
 formatTime :: UTCTime -> UTCTime -> String
 formatTime post env
