@@ -30,10 +30,12 @@ data User = User
             { name :: String
             , posts :: [Post]
             , followings :: [String] }
+            deriving (Show, Eq)
 
 data Post = Post { user :: String 
                  , msg :: String
                  , date :: UTCTime }
+                 deriving (Show, Eq)
 
 data Command = Cmd
                { cmd :: String
