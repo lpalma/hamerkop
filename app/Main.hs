@@ -29,13 +29,21 @@ initialEnv = do
   return $ Env { cmds = commands, users = Map.empty, eTime = t }
 
 commands :: Commands
-commands = Map.fromList $ map (\c@(s, _) -> (s, newCommand c)) commands'
+commands = Map.fromList $ map (\c@(s, _, _) -> (s, newCommand c)) commands'
 
-commands' :: [(String, ActionRunner)]
-commands' = [ ("->", postRunner)
-            , ("", readingRunner)
-            , ("follows", followsRunner)
-            , ("wall", wallRunner)]
+commands' :: [(String, String, ActionRunner)]
+commands' = [ ( "->"
+              , "Post a new message for a new or existing User. Usage: <@user> -> <message>"
+              , postRunner )
+            , ( ""
+              , "Displays a User's Posts. Usage: <@user>"
+              , readingRunner )
+            , ( "follows"
+              , "Follows a User. Usage: <@user> follows <user>"
+              , followsRunner )
+            , ( "wall"
+              , "Displays Posts from a User and its followings. Usage: <@user> wall"
+              , wallRunner ) ]
 
-newCommand :: (String, ActionRunner) -> Command
-newCommand (n, a) = Cmd { cmd = n, runner = a }
+newCommand :: (String, String, ActionRunner) -> Command
+newCommand (n, d, a) = Cmd { cmd = n, desc = d, runner = a }
