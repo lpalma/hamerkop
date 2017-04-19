@@ -2,9 +2,9 @@
 
 module CommandsSpec (spec) where
 
-import Commands (postRunner, readingRunner, followsRunner, wallRunner)
+import Commands (postRunner, readingRunner, followsRunner, wallRunner, helpRunner)
 import Control.Monad.State.Strict (evalState, execState)
-import qualified Data.Map.Lazy as Map (member, (!), empty)
+import qualified Data.Map.Lazy as Map (member, (!), empty, fromList)
 import Data.Time.Calendar (fromGregorian)
 import Data.Time.Clock
 import Env
@@ -67,6 +67,13 @@ spec = do
                       , "alice: I like dogs (4 minutes ago)" ]
       evalState (wallRunner $ stubAction "") usersEnv `shouldBe` m
 
+  describe "Commands.helpRunner" $ do
+
+    it "should display all command descriptions" $ do
+      let m = unlines [ "stub      a stub command"
+                      , "stub      a stub command" ]
+      evalState (helpRunner $ stubSysAct) multiCommandsEnv `shouldBe` m
+
 getUser :: String -> Env -> User
 getUser n Env{..} = users Map.! n
 
@@ -76,6 +83,10 @@ singleUserEnv = addUser stubUser emptyEnv
 multiplePostsEnv :: Env
 multiplePostsEnv = addUser (createUser ("foo", stubPosts, [])) env
   where env = createEnv (Map.empty, Map.empty, secAfterMidnight 121)
+
+multiCommandsEnv :: Env
+multiCommandsEnv = createEnv (cs, Map.empty, midnight)
+  where cs = Map.fromList [("stub", stubCommand), ("stub2", stubCommand)]
 
 stubUser :: User
 stubUser = createUser ("foo", [head stubPosts], [])
@@ -92,3 +103,5 @@ stubAction a = UserAct
                , action = ""
                , args = a
                , time = midnight }
+stubSysAct :: Action
+stubSysAct = SystemAct { sysAct = "help", sysTime = midnight }
