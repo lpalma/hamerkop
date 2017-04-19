@@ -41,10 +41,10 @@ newCommand (n, d, a) = Cmd { cmd = n, desc = d, runner = a }
 commands' :: [(String, String, ActionRunner)]
 commands' =
   [ ( "->"
-    , "Post a new message for a new or existing User. Usage: <@user> -> <message>"
+    , "Post a message for a new or existing User. Usage: <@user> -> <message>"
     , postRunner )
   , ( ""
-    , "Displays a User's Posts. Usage: <@user>"
+    , "Displays the User's Posts. Usage: <@user>"
     , readingRunner )
   , ( "follows"
     , "Follows a User. Usage: <@user> follows <user>"
@@ -53,5 +53,5 @@ commands' =
     , "Displays Posts from a User and its followings. Usage: <@user> wall"
     , wallRunner )
   , ( "help"
-    , "Displays this help message. Ussage: :help"
+    , "Displays this help message. Usage: :help"
     , helpRunner ) ]
