@@ -20,7 +20,7 @@ nextCommand env@Env{..} = do
   xs <- getLine
   t <- getCurrentTime
   let (out, nextEnv) = runState (eval xs) (env { eTime = t })
-  putStrLn out
+  putStrLn $ "\n" ++ out
   nextCommand nextEnv
 
 initialEnv :: IO Env
