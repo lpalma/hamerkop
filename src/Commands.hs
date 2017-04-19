@@ -34,10 +34,14 @@ wallRunner :: ActionRunner
 wallRunner a@UserAct{..} = gets $ unlines . userWall userName
 
 helpRunner :: ActionRunner
-helpRunner _ = gets $ unlines . cmdDescriptions
+helpRunner _ = gets $ unlines . (header ++) . cmdDescriptions
+  where header = [ "Hamerkop is project that simulates Social Networks behaviour"
+                 , "It uses in-memory storage, so all data will be lost upon exit"
+                 , "Users will be created when posting their first message"
+                 , "" ]
 
 cmdDescriptions :: Env -> [String]
-cmdDescriptions e = map formatDesc (Map.elems $ cmds e)
+cmdDescriptions e = "Available Commands: \n" : map formatDesc (Map.elems $ cmds e)
 
 formatDesc :: Command -> String
 formatDesc Cmd{..} = name ++ desc

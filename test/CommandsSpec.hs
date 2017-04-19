@@ -4,6 +4,7 @@ module CommandsSpec (spec) where
 
 import Commands (postRunner, readingRunner, followsRunner, wallRunner, helpRunner)
 import Control.Monad.State.Strict (evalState, execState)
+import Data.List (isSubsequenceOf)
 import qualified Data.Map.Lazy as Map (member, (!), empty, fromList)
 import Data.Time.Calendar (fromGregorian)
 import Data.Time.Clock
@@ -18,7 +19,7 @@ spec = do
     
     it "should return the message formatted with the user name" $ do
       let msg = "hello world!"
-      evalState (postRunner $ stubAction msg) emptyEnv `shouldBe` "foo: " ++ msg
+      evalState (postRunner $ stubAction msg) emptyEnv `shouldBe` "foo: " ++ msg ++ "\n"
 
     it "should insert new user upon first post" $ do
       let env = execState (postRunner $ stubAction "") emptyEnv
@@ -72,7 +73,7 @@ spec = do
     it "should display all command descriptions" $ do
       let m = unlines [ "stub      a stub command"
                       , "stub      a stub command" ]
-      evalState (helpRunner $ stubSysAct) multiCommandsEnv `shouldBe` m
+      evalState (helpRunner $ stubSysAct) multiCommandsEnv `shouldSatisfy` isSubsequenceOf m
 
 getUser :: String -> Env -> User
 getUser n Env{..} = users Map.! n
