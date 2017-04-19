@@ -50,7 +50,7 @@ stubRunner :: ActionRunner
 stubRunner a = return ""
 
 stubCommand :: Command
-stubCommand = Cmd { cmd = "stub", runner = stubRunner, desc = "stub"}
+stubCommand = Cmd { cmd = "stub", runner = stubRunner, desc = "a stub command"}
 
 addUser :: User -> Env -> Env
 addUser u@User{..} e@Env{..} = e { users = Map.insert name u users}
