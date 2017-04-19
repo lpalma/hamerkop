@@ -31,19 +31,23 @@ initialEnv = do
 commands :: Commands
 commands = Map.fromList $ map (\c@(s, _, _) -> (s, newCommand c)) commands'
 
-commands' :: [(String, String, ActionRunner)]
-commands' = [ ( "->"
-              , "Post a new message for a new or existing User. Usage: <@user> -> <message>"
-              , postRunner )
-            , ( ""
-              , "Displays a User's Posts. Usage: <@user>"
-              , readingRunner )
-            , ( "follows"
-              , "Follows a User. Usage: <@user> follows <user>"
-              , followsRunner )
-            , ( "wall"
-              , "Displays Posts from a User and its followings. Usage: <@user> wall"
-              , wallRunner ) ]
-
 newCommand :: (String, String, ActionRunner) -> Command
 newCommand (n, d, a) = Cmd { cmd = n, desc = d, runner = a }
+
+commands' :: [(String, String, ActionRunner)]
+commands' =
+  [ ( "->"
+    , "Post a new message for a new or existing User. Usage: <@user> -> <message>"
+    , postRunner )
+  , ( ""
+    , "Displays a User's Posts. Usage: <@user>"
+    , readingRunner )
+  , ( "follows"
+    , "Follows a User. Usage: <@user> follows <user>"
+    , followsRunner )
+  , ( "wall"
+    , "Displays Posts from a User and its followings. Usage: <@user> wall"
+    , wallRunner )
+  , ( "help"
+    , "Displays this help message. Ussage: :help"
+    , helpRunner ) ]
