@@ -15,7 +15,7 @@ welcome = unlines [ "Welcome to Hamerkop, a Social Network simulation."
 
 main :: IO ()
 main = do
-  putStrLn welcome
+  putStrLn $ "\n" ++ welcome
   env <- initialEnv
   nextCommand env
 
