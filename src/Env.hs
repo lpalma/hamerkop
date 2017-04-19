@@ -20,20 +20,22 @@ eval cmd = do
 
 parse :: String -> Env -> Either Error (Action, ActionRunner)
 parse "" e = Left ""
-parse args e@Env{..} = case cmd of
-                         ('@':xs):ys -> matchRunner (toUserAction (xs:ys) eTime) e
-                         (':':xs):ys -> matchRunner (toSystemAction (xs:ys) eTime) e
-                         _ -> Left $ "Command " ++ head cmd ++ " not found.\n"
-                       where cmd = words args
+parse args e@Env{..} =
+  case cmd of
+    ('@':xs):ys -> matchRunner (toUserAction (xs:ys) eTime) e
+    (':':xs):ys -> matchRunner (toSystemAction (xs:ys) eTime) e
+    _ -> Left $ "Command " ++ head cmd ++ " not found.\n"
+  where cmd = words args
 
 matchRunner :: Action -> Env -> Either Error (Action, ActionRunner)
 matchRunner a@SystemAct{..} env = matchRunner' a sysAct env
 matchRunner a@UserAct{..} env = matchRunner' a action env
 
 matchRunner' :: Action -> String -> Env -> Either Error (Action, ActionRunner)
-matchRunner' a name Env{..} = case find ((== name) . cmd) cmds of
-                                   Nothing -> Left $ "Command " ++ name ++ " not found.\n"
-                                   Just Cmd{..} -> Right (a, runner)
+matchRunner' a name Env{..} =
+  case find ((== name) . cmd) cmds of
+    Nothing -> Left $ "Command " ++ name ++ " not found.\n"
+    Just Cmd{..} -> Right (a, runner)
 
 findUsers :: [String] -> Users -> Users
 findUsers xs = Map.filterWithKey (\k _ -> k `elem` xs)
