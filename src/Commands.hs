@@ -5,6 +5,7 @@ module Commands
   , readingRunner
   , followsRunner
   , wallRunner
+  , helpRunner
   ) where
 
 import Control.Monad.State.Strict
@@ -31,6 +32,17 @@ followsRunner a@UserAct{..} = do
 
 wallRunner :: ActionRunner
 wallRunner a@UserAct{..} = gets $ unlines . userWall userName
+
+helpRunner :: ActionRunner
+helpRunner _ = gets $ unlines . cmdDescriptions
+
+cmdDescriptions :: Env -> [String]
+cmdDescriptions e = map formatDesc (Map.elems $ cmds e)
+
+formatDesc :: Command -> String
+formatDesc Cmd{..} = name ++ desc
+  where name = fixName ++ (drop (length fixName) "          ")
+        fixName = if (null cmd) then "show" else cmd
 
 userWall :: String -> Env -> [String]
 userWall n Env{..} =
