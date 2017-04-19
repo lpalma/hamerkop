@@ -15,6 +15,7 @@ import Types
 
 spec :: Spec
 spec = do
+
   describe "Commands.postRunner" $ do
     
     it "should return the message formatted with the user name" $ do
@@ -68,12 +69,12 @@ spec = do
                       , "alice: I like dogs (4 minutes ago)" ]
       evalState (wallRunner $ stubAction "") usersEnv `shouldBe` m
 
-  describe "Commands.helpRunner" $ do
+  describe "Commands.helpRunner" $
 
     it "should display all command descriptions" $ do
       let m = unlines [ "stub      a stub command"
                       , "stub      a stub command" ]
-      evalState (helpRunner $ stubSysAct) multiCommandsEnv `shouldSatisfy` isSubsequenceOf m
+      evalState (helpRunner stubSysAct) multiCommandsEnv `shouldSatisfy` isSubsequenceOf m
 
 getUser :: String -> Env -> User
 getUser n Env{..} = users Map.! n

@@ -8,14 +8,14 @@ import Test.Hspec
 import Types
 
 spec :: Spec
-spec = do
+spec =
   describe "Env.eval" $ do
     
-    it "should return empty string when empty command is given" $ do
+    it "should return empty string when empty command is given" $
       evalState (eval "") emptyEnv `shouldBe` ""
 
-    it "should return error message when command is not found" $ do
+    it "should return error message when command is not found" $
       evalState (eval "@john flies away") emptyEnv `shouldBe` "Command flies not found.\n"
 
-    it "user name should start with '@'" $ do
+    it "user name should start with '@'" $
       evalState (eval "john flies away") emptyEnv `shouldBe` "Command john not found.\n"
