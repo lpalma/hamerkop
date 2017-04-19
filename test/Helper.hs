@@ -13,6 +13,7 @@ module Helper
   , stubUsers
   , secAfterMidnight
   , usersEnv
+  , newSysAct
   ) where
 
 import Types
@@ -26,6 +27,9 @@ emptyEnv = createEnv (Map.empty, Map.empty, midnight)
 
 usersEnv :: Env
 usersEnv = createEnv (Map.empty, stubUsers, secAfterMidnight 250)
+
+newSysAct :: String -> UTCTime -> Action
+newSysAct xs t = SystemAct { sysAct = xs, sysTime = t }
 
 newUserAct :: String -> String -> String -> UTCTime -> Action
 newUserAct n act args t = UserAct { userName = n
@@ -46,7 +50,7 @@ stubRunner :: ActionRunner
 stubRunner a = return ""
 
 stubCommand :: Command
-stubCommand = Cmd { cmd = "stub", runner = stubRunner }
+stubCommand = Cmd { cmd = "stub", runner = stubRunner, desc = "stub"}
 
 addUser :: User -> Env -> Env
 addUser u@User{..} e@Env{..} = e { users = Map.insert name u users}

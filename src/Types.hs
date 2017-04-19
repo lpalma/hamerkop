@@ -37,6 +37,7 @@ data Post = Post { user :: String
 
 data Command = Cmd
                { cmd :: String
+               , desc :: String
                , runner :: ActionRunner }
 
 data Action

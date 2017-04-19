@@ -16,3 +16,8 @@ spec = do
 
     it "should return a UserAction without args" $ do
       toUserAction ["a", "->"] midnight `shouldBe` newUserAct "a" "->" "" midnight
+
+  describe "Types.toSystemAction" $ do
+
+    it "should consider only first word from command" $ do
+      toSystemAction ["help", "wanted"] midnight `shouldBe` newSysAct "help" midnight
