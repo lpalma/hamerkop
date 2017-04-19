@@ -16,7 +16,7 @@ Table of Contents
 * [Tests](#tests)
 * [Further Improvements](#further-improvements)
 
-## Fetures
+## Features
 
 You can post messages:
 
