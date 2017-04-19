@@ -15,6 +15,7 @@ import Data.DateTime (diffMinutes, diffSeconds)
 import Data.Ord (comparing)
 import Data.Time.Clock (UTCTime)
 import Env (findUsers)
+import System.Exit
 import Types
 
 postRunner :: ActionRunner
@@ -41,7 +42,9 @@ helpRunner _ = gets $ unlines . (header ++) . cmdDescriptions
                  , "" ]
 
 cmdDescriptions :: Env -> [String]
-cmdDescriptions e = "Available Commands: \n" : map formatDesc (Map.elems $ cmds e)
+cmdDescriptions e = "Available Commands: \n" : available ++ [exitCmd]
+  where available = map formatDesc (Map.elems $ cmds e)
+        exitCmd = "quit      Exits the application. Usage: :quit"
 
 formatDesc :: Command -> String
 formatDesc Cmd{..} = name ++ desc
