@@ -3,10 +3,11 @@
 module Main (main) where
 
 import Commands
-import Control.Monad.State.Strict (runState)
+import Control.Monad.State.Strict (runState, when)
 import qualified Data.Map.Lazy as Map (fromList, empty)
 import Data.Time.Clock (UTCTime, getCurrentTime)
 import Env
+import System.Exit
 import Types
 
 welcome :: String
@@ -22,6 +23,7 @@ main = do
 nextCommand :: Env -> IO ()
 nextCommand env@Env{..} = do
   xs <- getLine
+  when (xs == ":quit") exitSuccess
   t <- getCurrentTime
   let (out, nextEnv) = runState (eval xs) (env { eTime = t })
   putStrLn $ "\n" ++ out
@@ -30,7 +32,7 @@ nextCommand env@Env{..} = do
 initialEnv :: IO Env
 initialEnv = do
   t <- getCurrentTime
-  return $ Env { cmds = commands, users = Map.empty, eTime = t }
+  return Env { cmds = commands, users = Map.empty, eTime = t }
 
 commands :: Commands
 commands = Map.fromList $ map (\c@(s, _, _) -> (s, newCommand c)) commands'
