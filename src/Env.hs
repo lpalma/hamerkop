@@ -27,9 +27,13 @@ parse args e@Env{..} = case cmd of
                        where cmd = words args
 
 matchRunner :: Action -> Env -> Either Error (Action, ActionRunner)
-matchRunner a@UserAct{..} Env{..} = case find ((== action) . cmd) cmds of
-                                      Nothing -> Left $ "Command " ++ action ++ " not found.\n"
-                                      Just Cmd{..} -> Right (a, runner)
+matchRunner a@SystemAct{..} env = matchRunner' a sysAct env
+matchRunner a@UserAct{..} env = matchRunner' a action env
+
+matchRunner' :: Action -> String -> Env -> Either Error (Action, ActionRunner)
+matchRunner' a name Env{..} = case find ((== name) . cmd) cmds of
+                                   Nothing -> Left $ "Command " ++ name ++ " not found.\n"
+                                   Just Cmd{..} -> Right (a, runner)
 
 findUsers :: [String] -> Users -> Users
 findUsers xs = Map.filterWithKey (\k _ -> k `elem` xs)
