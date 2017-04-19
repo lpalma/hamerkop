@@ -20,7 +20,7 @@ import Types
 postRunner :: ActionRunner
 postRunner a@UserAct{..} = do
   modify $ upsert a
-  return $ userName ++ ": " ++ args
+  return $ userName ++ ": " ++ args ++ "\n"
 
 readingRunner :: ActionRunner
 readingRunner a@UserAct{..} = gets $ unlines . userPosts userName
@@ -28,7 +28,7 @@ readingRunner a@UserAct{..} = gets $ unlines . userPosts userName
 followsRunner :: ActionRunner
 followsRunner a@UserAct{..} = do
   modify $ newFollow a
-  return $ userName ++ " is now following " ++ args
+  return $ userName ++ " is now following " ++ args ++ "\n"
 
 wallRunner :: ActionRunner
 wallRunner a@UserAct{..} = gets $ unlines . userWall userName
